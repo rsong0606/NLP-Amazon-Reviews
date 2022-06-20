@@ -1,0 +1,6 @@
+pandas
+nltk
+numpy
+gensim  ==  4.2.0
+spacy
+emoji
