@@ -25,7 +25,7 @@ nltk.download('stopwords')
 stop = stopwords.words('english')
 df['ReviewBody'] = df['ReviewBody'].apply(
     lambda words: ' '.join(word.lower() for word in words.split() if word not in stop))
-print(df.head())
+print(len(df))
 
 texts = df.ReviewBody.values.tolist()
 
@@ -82,10 +82,12 @@ def get_main_topic_df(model, bow, texts):
 
 main_topic_df = get_main_topic_df(lda_model, corpus, processed_text)
 
-print(main_topic_df.head(10))
+df_out = pd.concat([df, main_topic_df], axis=1)
+df_out.to_csv('dataset/lda_df.csv',index=False)
+print(len(main_topic_df))
 
-grouped_topics = main_topic_df.groupby('Dominant_topic')
-grouped_topics.count()['Processed_text']. \
-    plot.bar(rot=0). \
-    set(title=f'Dominant Topic Frequency in the {len(reviews)} Reviews',
-        ylabel='Topic frequency');
+# grouped_topics = main_topic_df.groupby('Dominant_topic')
+# grouped_topics.count()['Processed_text']. \
+#     plot.bar(rot=0). \
+#     set(title=f'Dominant Topic Frequency in the {len(reviews)} Reviews',
+#         ylabel='Topic frequency');
