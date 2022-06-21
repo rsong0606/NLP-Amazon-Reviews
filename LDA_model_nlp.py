@@ -20,12 +20,14 @@ df['ReviewTitle'] = df['ReviewTitle'].apply(data_pre_funs.remove_emoji_)
 df['ReviewBody'] = df['ReviewBody'].apply(data_pre_funs.remove_emoji_)
 df = df[df['ReviewBody'].str.len() >= 3]
 df['ReviewBody'] = df['ReviewBody'].apply(data_pre_funs.remove_newline)
+df['ReviewTitle'] = df['ReviewTitle'].apply(data_pre_funs.remove_newline)
 df['ReviewBody'] = df['ReviewBody'].apply(data_pre_funs.remove_special_chars)
 nltk.download('stopwords')
 stop = stopwords.words('english')
 df['ReviewBody'] = df['ReviewBody'].apply(
     lambda words: ' '.join(word.lower() for word in words.split() if word not in stop))
-print(len(df))
+df = df.reset_index(drop=True)
+print(df.tail())
 
 texts = df.ReviewBody.values.tolist()
 
@@ -84,7 +86,7 @@ main_topic_df = get_main_topic_df(lda_model, corpus, processed_text)
 
 df_out = pd.concat([df, main_topic_df], axis=1)
 df_out.to_csv('dataset/lda_df.csv',index=False)
-print(len(main_topic_df))
+print(main_topic_df.tail())
 
 # grouped_topics = main_topic_df.groupby('Dominant_topic')
 # grouped_topics.count()['Processed_text']. \
