@@ -20,7 +20,7 @@ df['ReviewTitle'] = df['ReviewTitle'].apply(data_pre_funs.remove_emoji_)
 df['ReviewBody'] = df['ReviewBody'].apply(data_pre_funs.remove_emoji_)
 df['ReviewBody'] = df['ReviewBody'].apply(data_pre_funs.remove_newline)
 df['ReviewTitle'] = df['ReviewTitle'].apply(data_pre_funs.remove_newline)
-df = df[df.ReviewTitle.apply(lambda x: len(str(x).split()) >= 3)]
+df = df[df.ReviewBody.apply(lambda x: len(str(x).split()) >= 3)]
 df['ReviewBody'] = df['ReviewBody'].apply(data_pre_funs.remove_special_chars)
 nltk.download('stopwords')
 stop = stopwords.words('english')
@@ -37,7 +37,7 @@ def process_words(texts):
     for t in texts:
         t = ' '.join(re.findall(r'\b\w[\w\']+\b', t))
         doc = nlp(t)
-        result.append([token.lemma_.lower() for token in doc])
+        result.append([token.lemma_.lower() for token in doc if token.lemma_ not in stop and token.pos_ =='NOUN'])
     return result
 
 
